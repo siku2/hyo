@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="hyo.css" rel="stylesheet"></link>
+
+    <script type="module" defer>
+      import init from "/pkg/hyo.js";
+
+      async function main() {
+        (await init()).run_app();
+      }
+
+      main();
+    </script>
+  </head>
+</html>
