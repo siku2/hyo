@@ -1,4 +1,11 @@
 use yew::prelude::*;
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CardInfo {
+    pub color: String,
+    pub number: u8,
+}
+
 #[derive(Clone, PartialEq, Properties)]
 pub struct CardFrontProps {
     pub color: String,

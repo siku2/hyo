@@ -1,6 +1,8 @@
 @mixin card-size {
   height: 15rem;
   width: 11rem;
+
+  box-sizing: border-box;
 }
 
 @mixin card-face($border-color) {
@@ -50,8 +52,6 @@
 
   & > * {
     position: absolute;
-
-    box-sizing: border-box;
 
     backface-visibility: hidden;
   }

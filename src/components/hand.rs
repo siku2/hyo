@@ -1,12 +1,12 @@
 use super::{
-    card::{Card, CardProps},
+    card::{CardFront, CardInfo},
     layout::circle::Circle,
 };
 use yew::prelude::*;
 
-#[derive(Clone, Properties)]
+#[derive(Clone, PartialEq, Properties)]
 pub struct HandProps {
-    pub cards: Vec<CardProps>,
+    pub cards: Vec<CardInfo>,
 }
 
 pub struct Hand {
@@ -26,8 +26,12 @@ impl Component for Hand {
     }
 
     fn change(&mut self, props: Self::Properties) -> bool {
-        self.props = props;
-        true
+        if self.props != props {
+            self.props = props;
+            true
+        } else {
+            false
+        }
     }
 
     fn view(&self) -> Html {
@@ -36,9 +40,9 @@ impl Component for Hand {
             .cards
             .iter()
             .cloned()
-            .map(|props| {
+            .map(|info| {
                 html! {
-                    <Card with props/>
+                    <CardFront color=info.color number=info.number/>
                 }
             })
             .collect();

@@ -1,9 +1,11 @@
 .pile {
   position: relative;
+
+  transform-style: preserve-3d;
 }
 
 .pile > * {
   position: absolute;
 
-  left: calc(var(--child-index) * 0.1rem);
+  transform: translateZ(calc(var(--child-index) * -0.2rem));
 }
