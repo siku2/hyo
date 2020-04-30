@@ -1,0 +1,9 @@
+.pile {
+  position: relative;
+}
+
+.pile > * {
+  position: absolute;
+
+  left: calc(var(--child-index) * 0.1rem);
+}

@@ -1,0 +1,11 @@
+.hand {
+  height: 30rem;
+  width: 50rem;
+}
+
+.hand > .layout__circle {
+  --circle-radius: 1rem;
+
+  left: 50%;
+  top: 24rem;
+}

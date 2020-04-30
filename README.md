@@ -5,24 +5,21 @@ This project is currently in a very early phase. So much so that the goal of it 
 
 ## Usage
 
-### Build
+## Development
 
-Use [wasm-pack](https://rustwasm.github.io/wasm-pack/) to build the application:
+### Prerequisites
 
-```shell
-wasm-pack build --target web
-```
+In order to build the project you need to have a few things installed:
 
-### Hosting
+- [Rust](https://www.rust-lang.org/) and specifically Cargo
+- [wasm-pack](https://rustwasm.github.io/wasm-pack/)
+- [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/)
 
-This is currently really basic.
-You can find the files in the [site](site) directory but because it needs to access the output of wasm-pack you need to host the entire project directory.
-For instance, I'm using the VS Code extension [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer).
-
-You can run the following command in the project root directory to start a simple HTTP server (assuming you have Python installed, of course).
+But once you have them installed running it is as simple as:
 
 ```shell
-python -m http.server
+npm run watch
 ```
 
-After running this command you should be able to access the site using the URL: <http://localhost:8000/site/>
+This builds the site and starts a webserver. The site is rebuilt when changes are detected.
+Currently recompiling the WebAssembly causes some problems. If changes to the Rust code don't seem to be taking effect just restart the watch task.

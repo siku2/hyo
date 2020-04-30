@@ -1,0 +1,24 @@
+.layout__circle {
+  position: relative;
+
+  height: 0;
+  width: 0;
+}
+
+//! FIXME for some reason this doesn't work with '> *'
+.layout__circle > div {
+  position: absolute;
+
+  width: min-content;
+
+  padding-top: 5rem;
+
+  transform: var(--base-transform);
+  transform-origin: bottom center;
+
+  transition: padding-bottom 250ms ease-out;
+
+  &:hover {
+    padding-bottom: 5rem;
+  }
+}

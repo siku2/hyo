@@ -45,7 +45,7 @@ impl Component for Hand {
 
         html! {
             <div class="hand">
-                <Circle radius="1rem" target_angle=22.5 max_total_angle=180.0>
+                <Circle target_angle=22.5 max_total_angle=180.0>
                     { cards }
                 </Circle>
             </div>

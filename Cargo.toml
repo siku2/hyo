@@ -8,5 +8,7 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
+log = "0.4"
 wasm-bindgen = "0.2"
+wasm-logger = "0.2"
 yew = "0.15"

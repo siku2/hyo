@@ -4,7 +4,6 @@ use yew::prelude::*;
 struct CircleItemProps {
     pub children: Children,
     pub angle: f32,
-    pub radius: String,
 }
 
 struct CircleItem {
@@ -34,15 +33,12 @@ impl Component for CircleItem {
         let (y_dir, x_dir) = (props.angle - 90.0).to_radians().sin_cos();
         let style = format!(
             "--base-transform:translateX(-50%) rotate({}deg);\
-            left:calc({radius} * {});\
-            bottom:calc({radius} + {radius} * {});",
-            props.angle,
-            x_dir,
-            y_dir,
-            radius = props.radius,
+            left:calc(var(--circle-radius) * {});\
+            bottom:calc(var(--circle-radius) * {});",
+            props.angle, x_dir, -y_dir,
         );
         html! {
-            <div class="insetable" style=style>
+            <div style=style>
                 { props.children.render() }
             </div>
         }
@@ -62,7 +58,6 @@ fn min_partial<T: std::cmp::PartialOrd>(v1: T, v2: T) -> T {
 #[derive(Clone, Properties)]
 pub struct CircleProps {
     pub children: Children,
-    pub radius: String,
     pub target_angle: f32,
     pub max_total_angle: f32,
 }
@@ -100,14 +95,14 @@ impl Component for Circle {
         let children_iter = children.iter().enumerate().map(|(i, child)| {
             let angle = start_angle + i as f32 * child_angle;
             html! {
-                <CircleItem angle=angle radius=props.radius.clone()>
+                <CircleItem angle=angle>
                     { child }
                 </CircleItem>
             }
         });
 
         html! {
-            <div class="layout_circle">
+            <div class="layout__circle">
                 { for children_iter }
             </div>
         }

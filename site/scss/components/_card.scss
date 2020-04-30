@@ -1,0 +1,90 @@
+@mixin card-size {
+  height: 15rem;
+  width: 11rem;
+}
+
+@mixin card-face($border-color) {
+  @include card-size;
+
+  border: 0.75rem inset $border-color;
+  border-radius: 2rem;
+
+  background-color: rgb(30, 30, 30);
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 35px,
+    rgba(33, 33, 33, 0.5) 35px,
+    rgba(33, 33, 33, 0.5) 70px
+  );
+}
+
+.card-front {
+  @include card-face(var(--card-color, #fff));
+
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.card-back {
+  @include card-face(#fff);
+}
+
+.card-rotate__container {
+  @include card-size;
+}
+
+.card-rotate {
+  position: relative;
+
+  height: 100%;
+  width: 100%;
+
+  transform-style: preserve-3d;
+
+  transition: transform 800ms;
+
+  & > * {
+    position: absolute;
+
+    box-sizing: border-box;
+
+    backface-visibility: hidden;
+  }
+
+  & > .card-back {
+    transform: rotateY(180deg);
+  }
+}
+
+.card__number {
+  color: var(--card-color, #fff);
+
+  font-family: sans-serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+
+  user-select: none;
+
+  $inset-value: 1rem;
+
+  &.center {
+    font-size: 3.5rem;
+  }
+  &.top-left {
+    position: absolute;
+
+    left: $inset-value;
+    top: $inset-value;
+  }
+  &.bottom-right {
+    position: absolute;
+
+    bottom: $inset-value;
+    right: $inset-value;
+  }
+}
