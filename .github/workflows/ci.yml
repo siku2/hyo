@@ -11,6 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install dependencies
+      run: cargo install wasm-pack
+
     - name: Build
       run: npm run build
 
