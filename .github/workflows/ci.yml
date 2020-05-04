@@ -36,11 +36,19 @@ jobs:
     - name: Push
       run: | 
         set -e
+        
+        git config user.email "action@github.com"
+        git config user.name "GitHub Action"
+        
         tmp_dir=$(mktemp -d -t dist-XXXXXXXXXX)
         cp -R dist "$tmp_dir"
+        
         git fetch
         git checkout --force gh-pages
+        git reset --hard
+        
         cp -Rf "$tmp_dir/." .
+        
         git add .
         git commit -m "[CI] deploy ${{ github.sha }}"
         git push
