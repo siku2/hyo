@@ -122,8 +122,10 @@ impl Component for Game {
         html! {
             <div class="table">
                 <Hand cards=state.holding.clone() onclick_card=hand_callback/>
-                <VisiblePile cards=state.play_pile.clone()/>
-                <HiddenPile cards=state.draw_pile.len() onclick=draw_pile_callback/>
+                <div class="piles">
+                    <VisiblePile cards=state.play_pile.clone()/>
+                    <HiddenPile cards=state.draw_pile.len() onclick=draw_pile_callback/>
+                </div>
             </div>
         }
     }

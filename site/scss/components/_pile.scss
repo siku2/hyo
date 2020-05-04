@@ -9,7 +9,7 @@
 .pile__item > * {
   position: absolute;
 
-  --offset: calc(var(--child-index) * 0.2rem);
+  --offset: calc(var(--child-index) * 0.1rem);
 
   transform: translate(var(--offset), var(--offset));
 

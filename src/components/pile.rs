@@ -101,7 +101,7 @@ impl Component for VisiblePile {
                     <CardFront color=info.color number=info.number/>
                 }
             })
-            .take(3)
+            .take(10)
             .rev()
             .collect();
 

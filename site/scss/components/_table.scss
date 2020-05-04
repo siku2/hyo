@@ -37,10 +37,14 @@
 }
 
 .table {
-  display: flex;
+  display: grid;
 
-  align-items: center;
-  justify-content: space-evenly;
+  grid:
+    ".          piles   .       " 15rem
+    ".          hand    .       " auto
+    / 1fr 4fr 1fr;
+
+  justify-items: center;
 
   height: 100%;
   width: 100%;
@@ -60,5 +64,22 @@
     opacity: 0.5;
 
     z-index: -1;
+  }
+
+  & > .hand {
+    grid-area: hand;
+
+    z-index: 1;
+  }
+
+  & > .piles {
+    grid-area: piles;
+
+    justify-self: stretch;
+
+    display: flex;
+    justify-content: space-evenly;
+
+    gap: 1rem;
   }
 }
