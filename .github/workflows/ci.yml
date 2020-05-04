@@ -17,5 +17,11 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: Test
-      run: echo ls -a
+    - name: Push
+      run: |
+        tmp_dir=$(mktemp -d -t dist-XXXXXXXXXX)
+        cp -R dist "$tmp_dir"
+        git checkout --force gh-pages
+        cp -R "$tmp_dir/." .
+        git commit --all -m "Hello World"
+        git push
