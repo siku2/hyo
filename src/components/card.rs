@@ -10,6 +10,9 @@ pub struct CardInfo {
 pub struct CardFrontProps {
     pub color: String,
     pub number: u8,
+
+    #[prop_or_else(Callback::noop)]
+    pub onclick: Callback<MouseEvent>,
 }
 pub struct CardFront {
     props: CardFrontProps,
@@ -38,10 +41,9 @@ impl Component for CardFront {
 
     fn view(&self) -> Html {
         let props = &self.props;
-        let style = format!("--card-color: {}", props.color);
 
         html! {
-            <div class="card-front" style=style>
+            <div class="card-front" style=format!("--card-color: {}", props.color) onclick=props.onclick.clone()>
                 <div class="card__number top-left">{props.number}</div>
                 <div class="card__number center">{props.number}</div>
                 <div class="card__number bottom-right">{props.number}</div>

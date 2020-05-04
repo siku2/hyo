@@ -37,15 +37,28 @@
 }
 
 .table {
-  @include upholstery;
+  display: flex;
 
-  position: absolute;
+  align-items: center;
+  justify-content: space-evenly;
 
-  height: 35rem;
-  width: 70rem;
+  height: 100%;
+  width: 100%;
 
-  transform: rotateX(45deg);
-  transform-style: preserve-3d;
+  &::after {
+    @include upholstery;
 
-  z-index: -1;
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    height: 100%;
+    width: 100%;
+
+    opacity: 0.5;
+
+    z-index: -1;
+  }
 }

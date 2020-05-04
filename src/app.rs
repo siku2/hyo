@@ -1,4 +1,4 @@
-use crate::components::{card::CardInfo, hand::Hand, pile::{VisiblePile, HiddenPile}};
+use crate::game::Game;
 use yew::prelude::*;
 
 pub struct App;
@@ -20,49 +20,8 @@ impl Component for App {
     }
 
     fn view(&self) -> Html {
-        let handle_click = Callback::from(|event: MouseEvent| {
-            log::info!("clicked card {:?}", event);
-        });
-
-        let cards = vec![
-            CardInfo {
-                color: String::from("red"),
-                number: 8,
-            },
-            CardInfo {
-                color: String::from("red"),
-                number: 5,
-            },
-            CardInfo {
-                color: String::from("red"),
-                number: 7,
-            },
-            CardInfo {
-                color: String::from("blue"),
-                number: 4,
-            },
-            CardInfo {
-                color: String::from("yellow"),
-                number: 1,
-            },
-            CardInfo {
-                color: String::from("green"),
-                number: 0,
-            },
-            CardInfo {
-                color: String::from("green"),
-                number: 2,
-            },
-        ];
-
         html! {
-            <>
-                <Hand cards=cards.clone()/>
-                <div class="table">
-                    <VisiblePile cards=cards.clone()/>
-                    <HiddenPile cards=13/>
-                </div>
-            </>
+            <Game/>
         }
     }
 }

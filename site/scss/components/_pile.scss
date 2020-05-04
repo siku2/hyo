@@ -1,11 +1,20 @@
 .pile {
+  @include card-size;
+
   position: relative;
 
   transform-style: preserve-3d;
 }
 
-.pile > * {
+.pile__item > * {
   position: absolute;
 
-  transform: translateZ(calc(var(--child-index) * -0.2rem));
+  --offset: calc(var(--child-index) * 0.2rem);
+
+  transform: translate(var(--offset), var(--offset));
+
+  &:first-child {
+    box-shadow: var(--offset) var(--offset) 0.5rem
+      rgba($color: #000, $alpha: 0.6);
+  }
 }

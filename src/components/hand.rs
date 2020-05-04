@@ -7,21 +7,34 @@ use yew::prelude::*;
 #[derive(Clone, PartialEq, Properties)]
 pub struct HandProps {
     pub cards: Vec<CardInfo>,
+
+    #[prop_or_else(Callback::noop)]
+    pub onclick_card: Callback<usize>,
 }
 
 pub struct Hand {
     props: HandProps,
+    link: ComponentLink<Self>,
+}
+
+pub enum HandMsg {
+    CardClick(usize),
 }
 
 impl Component for Hand {
-    type Message = ();
+    type Message = HandMsg;
     type Properties = HandProps;
 
-    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
-        Self { props }
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        Self { props, link }
     }
 
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        let props = &self.props;
+
+        let HandMsg::CardClick(i) = msg;
+        props.onclick_card.emit(i);
+
         false
     }
 
@@ -40,9 +53,12 @@ impl Component for Hand {
             .cards
             .iter()
             .cloned()
-            .map(|info| {
+            .enumerate()
+            .map(|(i, info)| {
+                let callback = self.link.callback(move |_| HandMsg::CardClick(i));
+
                 html! {
-                    <CardFront color=info.color number=info.number/>
+                    <CardFront color=info.color number=info.number onclick=callback/>
                 }
             })
             .collect();
