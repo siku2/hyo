@@ -38,7 +38,8 @@ jobs:
         set -e
         tmp_dir=$(mktemp -d -t dist-XXXXXXXXXX)
         cp -R dist "$tmp_dir"
-        git checkout --force origin/gh-pages
+        git fetch
+        git checkout --force gh-pages
         cp -Rf "$tmp_dir/." .
         git add .
         git commit -m "Hello World"
