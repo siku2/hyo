@@ -11,8 +11,24 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: cargo install wasm-pack
+    - name: Install wasm-pack
+      run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+    
+    - name: Cache cargo build
+      uses: actions/cache@v1
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-build-target-
+    
+    - name: Cache npm
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
 
     - name: Build
       run: npm run build
@@ -22,7 +38,7 @@ jobs:
         set -e
         tmp_dir=$(mktemp -d -t dist-XXXXXXXXXX)
         cp -R dist "$tmp_dir"
-        git checkout --force gh-pages
+        git checkout --force origin/gh-pages
         cp -Rf "$tmp_dir/." .
         git add .
         git commit -m "Hello World"
