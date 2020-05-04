@@ -42,5 +42,5 @@ jobs:
         git checkout --force gh-pages
         cp -Rf "$tmp_dir/." .
         git add .
-        git commit -m "Hello World"
+        git commit -m "[CI] deploy ${{ github.sha }}"
         git push
