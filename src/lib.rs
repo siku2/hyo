@@ -1,6 +1,7 @@
 mod app;
 mod components;
 mod game;
+mod locale;
 
 use wasm_bindgen::prelude::*;
 use wasm_logger;

@@ -290,9 +290,15 @@ name = "hyo"
 version = "0.0.1"
 dependencies = [
  "fluent",
+ "js-sys",
  "log",
+ "serde",
+ "thiserror",
+ "unic-langid",
  "wasm-bindgen",
+ "wasm-bindgen-futures",
  "wasm-logger",
+ "web-sys",
  "yew",
 ]
 
@@ -526,6 +532,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "24d81136159f779c35b10655f45210c71cd5ca5a45aadfe9840a61c7071735ed"
 dependencies = [
  "unic-langid-impl",
+ "unic-langid-macros",
 ]
 
 [[package]]
@@ -535,6 +542,30 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c43c61e94492eb67f20facc7b025778a904de83d953d8fcb60dd9adfd6e2d0ea"
 dependencies = [
  "tinystr",
+]
+
+[[package]]
+name = "unic-langid-macros"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "49bd90791278634d57e3ed4a4073108e3f79bfb87ab6a7b8664ba097425703df"
+dependencies = [
+ "proc-macro-hack",
+ "tinystr",
+ "unic-langid-impl",
+ "unic-langid-macros-impl",
+]
+
+[[package]]
+name = "unic-langid-macros-impl"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e0098f77bd754f8fb7850cdf4ab143aa821898c4ac6dc16bcb2aa3e62ce858d1"
+dependencies = [
+ "proc-macro-hack",
+ "quote",
+ "syn",
+ "unic-langid-impl",
 ]
 
 [[package]]
@@ -550,6 +581,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2cc57ce05287f8376e998cbddfb4c8cb43b84a7ec55cf4551d7c00eef317a47f"
 dependencies = [
  "cfg-if",
+ "serde",
+ "serde_json",
  "wasm-bindgen-macro",
 ]
 

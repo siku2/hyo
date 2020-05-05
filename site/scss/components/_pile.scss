@@ -4,6 +4,12 @@
   position: relative;
 
   transform-style: preserve-3d;
+
+  & > .pile__item:not(:last-child) {
+    $percentage: var(--child-index) / var(--cards);
+    $brightness: calc(0.5 + (#{$percentage}) / 2);
+    filter: brightness($brightness);
+  }
 }
 
 .pile__item > * {
