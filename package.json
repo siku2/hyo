@@ -5,7 +5,17 @@
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.3.1",
     "parcel-plugin-wasm.rs": "^1.2.15",
     "sass": "^1.26.5"
+  },
+  "staticFiles": {
+    "staticPath": [
+      {
+        "staticPath": "site/locale",
+        "staticOutDir": "locale",
+        "watcherGlob": "**/*.ftl"
+      }
+    ]
   }
 }

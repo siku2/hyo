@@ -83,18 +83,21 @@ impl Component for Game {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             GameMsg::HandCardClicked(i) => {
+                log::debug!("playing card with index {}", i);
                 let state = &mut self.state;
                 if i < state.holding.len() {
                     let card = state.holding.remove(i);
                     state.play_pile.push(card);
                     true
                 } else {
+                    log::warn!("failed to play card with index {}", i);
                     false
                 }
             }
             GameMsg::DrawPileClicked => {
                 let state = &mut self.state;
                 if let Some(card) = state.draw_pile.pop() {
+                    log::debug!("drawing card");
                     state.holding.push(card);
                     true
                 } else {
