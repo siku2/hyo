@@ -1,4 +1,5 @@
 use crate::game::Game;
+use crate::views::LoadingView;
 use yew::prelude::*;
 
 pub struct App;
@@ -21,7 +22,7 @@ impl Component for App {
 
     fn view(&self) -> Html {
         html! {
-            <Game/>
+            <LoadingView/>
         }
     }
 }

@@ -290,6 +290,7 @@ name = "hyo"
 version = "0.0.1"
 dependencies = [
  "fluent",
+ "futures",
  "js-sys",
  "log",
  "serde",

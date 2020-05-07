@@ -1,4 +1,4 @@
-.layout__circle {
+.layout-circle {
   position: relative;
 
   height: 0;
@@ -6,7 +6,7 @@
 }
 
 //! FIXME for some reason this doesn't work with '> *'
-.layout__circle > div {
+.layout-circle > div {
   position: absolute;
 
   width: min-content;

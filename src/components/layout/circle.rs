@@ -102,7 +102,7 @@ impl Component for Circle {
         });
 
         html! {
-            <div class="layout__circle">
+            <div class="layout-circle">
                 { for children_iter }
             </div>
         }
