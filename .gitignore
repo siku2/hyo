@@ -1,2 +1,5 @@
 /.vscode/
 /target/
+
+# ignored for now
+/games

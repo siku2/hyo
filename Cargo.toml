@@ -1,5 +1,7 @@
 [workspace]
 members = [
+    "hyo-bridge",
     "hyo-client",
     "hyo-server",
+    "hyo-game",
 ]
