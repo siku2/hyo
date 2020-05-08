@@ -1,0 +1,13 @@
+@mixin background {
+  position: absolute;
+  z-index: -1;
+
+  height: 100%;
+  width: 100%;
+}
+
+@mixin pseudo-element-background {
+  @include background;
+
+  content: "";
+}

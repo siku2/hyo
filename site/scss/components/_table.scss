@@ -1,4 +1,5 @@
-@import "../mixins/patterns/upholstry";
+@use "mixins";
+@use "mixins/patterns";
 
 .table {
   display: grid;
@@ -14,20 +15,8 @@
   width: 100%;
 
   &::after {
-    @include upholstery;
-
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-
-    height: 100%;
-    width: 100%;
-
-    opacity: 0.5;
-
-    z-index: -1;
+    @include mixins.pseudo-element-background;
+    @include patterns.upholstery;
   }
 
   & > .hand {

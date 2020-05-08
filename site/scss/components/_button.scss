@@ -1,0 +1,46 @@
+@use "sass:list";
+
+@use "variables/colors";
+
+.button-row {
+  display: flex;
+
+  &--center {
+    justify-content: center;
+  }
+
+  &__btn {
+    position: relative;
+
+    padding: 0.5rem 1rem;
+
+    border-style: solid;
+    border-radius: 0.1rem;
+    outline: none;
+
+    $backdrop-filters: blur(0.1rem);
+    backdrop-filter: $backdrop-filters;
+    background: none;
+    color: colors.$text;
+
+    font-weight: 700;
+
+    transition: backdrop-filter, transform 100ms ease-in-out;
+
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      backdrop-filter: list.append($backdrop-filters, sepia(100%));
+      transform: scale(110%);
+    }
+
+    &:active {
+      transform: scale(90%);
+    }
+
+    & + & {
+      margin-left: 5rem;
+    }
+  }
+}

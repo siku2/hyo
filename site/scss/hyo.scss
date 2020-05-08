@@ -1,5 +1,3 @@
-@import "components";
-@import "views";
+@use "core";
 
-@import "core";
-@import "fonts";
+@use "views";
