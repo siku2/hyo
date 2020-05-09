@@ -120,7 +120,7 @@ impl Component for Game {
         let state = &self.state;
 
         let draw_pile_callback = self.link.callback(|_| GameMsg::DrawPileClicked);
-        let hand_callback = self.link.callback(|i| GameMsg::HandCardClicked(i));
+        let hand_callback = self.link.callback(GameMsg::HandCardClicked);
 
         html! {
             <div class="table">

@@ -1,4 +1,3 @@
-use crate::game::Game;
 use crate::views::LoadingView;
 use yew::prelude::*;
 

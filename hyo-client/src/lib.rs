@@ -6,7 +6,6 @@ mod locale;
 mod views;
 
 use wasm_bindgen::prelude::*;
-use wasm_logger;
 
 #[wasm_bindgen]
 pub fn run_app() -> Result<(), JsValue> {

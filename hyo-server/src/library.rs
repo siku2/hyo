@@ -1,10 +1,10 @@
-use hyo_game::{self, Manifest};
-use std::{fs, path::Path};
+use hyo_game::Game;
+use std::{collections::HashMap, fs, path::Path};
 
-pub type GameLibrary = Vec<Manifest>;
+pub type GameLibrary = HashMap<String, Game>;
 
 pub fn load(path: impl AsRef<Path>) -> Result<GameLibrary, anyhow::Error> {
-    let mut games = Vec::new();
+    let mut games = GameLibrary::new();
 
     for entry in fs::read_dir(path)? {
         let dir_entry = match entry {
@@ -17,14 +17,14 @@ pub fn load(path: impl AsRef<Path>) -> Result<GameLibrary, anyhow::Error> {
 
         let dir_path = dir_entry.path();
 
-        let game = match hyo_game::load_game(&dir_path) {
+        let game = match Game::load(&dir_path) {
             Ok(v) => v,
             Err(e) => {
                 log::error!("failed to load game at {:?}: {}", dir_path, e);
                 continue;
             }
         };
-        games.push(game);
+        games.insert(game.manifest.id.clone(), game);
     }
 
     Ok(games)

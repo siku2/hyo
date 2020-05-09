@@ -5,17 +5,20 @@ authors = ["Simon Berger <simon@siku2.io>"]
 edition = "2018"
 
 [dependencies]
+hyo-bridge = { path = "../hyo-bridge" }
 hyo-game = { path = "../hyo-game" }
 
 anyhow = "1.0"
+fluent-langneg = "0.13"
 log = "0.4"
 rocket = "0.4"
 semver = { version = "0.9", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 toml = "0.5"
 unic-langid = { version = "0.9", features = ["serde"] }
+uuid = { version = "0.8", features = ["serde"] }
 
 [dependencies.rocket_contrib]
 version = "0.4"
 default-features = false
-features = ["json"]
+features = ["json", "uuid"]

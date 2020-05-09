@@ -1,13 +1,7 @@
+use hyo_fluent::LanguageIdentifier;
 use semver::{Version, VersionReq};
 use serde::{Deserialize, Serialize};
-use unic_langid::LanguageIdentifier;
-
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
-pub struct Game {
-    pub id: String,
-    pub version: Version,
-    pub authors: Vec<String>,
-}
+use std::{fs, path::Path};
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Dependencies {
@@ -24,7 +18,17 @@ pub struct Metadata {
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Manifest {
-    pub game: Game,
+    pub id: String,
+    pub version: Version,
+    pub authors: Vec<String>,
+
     pub dependencies: Dependencies,
     pub metadata: Metadata,
+}
+
+impl Manifest {
+    pub fn load(path: &Path) -> Result<Self, anyhow::Error> {
+        let raw = fs::read(path)?;
+        toml::from_slice(&raw).map_err(|e| e.into())
+    }
 }

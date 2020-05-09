@@ -2,6 +2,7 @@
 members = [
     "hyo-bridge",
     "hyo-client",
-    "hyo-server",
+    "hyo-fluent",
     "hyo-game",
+    "hyo-server",
 ]
