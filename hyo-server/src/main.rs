@@ -42,7 +42,7 @@ struct GameModel<'s> {
 
 impl<'s> GameModel<'s> {
     fn from_game(game: &'s Game, requested_languages: &[LanguageIdentifier]) -> Self {
-        let bundles = game.locales.get_bundles(requested_languages).unwrap();
+        let bundles = game.locales.negotiate(requested_languages);
         let name = bundles.localize("hyo-game-name", None).into_owned();
         let description = bundles.localize("hyo-game-description", None).into_owned();
         Self {
