@@ -10,4 +10,4 @@ edition = "2018"
 fluent = "0.12"
 fluent-langneg = "0.13"
 thiserror = "1.0"
-unic-langid = { version = "0.9", features = ["serde"] }
+unic-langid = { version = "0.9", features = ["macros", "serde"] }

@@ -5,6 +5,7 @@ pub use fluent::{
     FluentMessage,
     FluentResource,
 };
+pub use fluent_langneg::parse_accepted_languages;
 use fluent_langneg::NegotiationStrategy;
 use std::{
     borrow::{Borrow, Cow},
@@ -12,7 +13,16 @@ use std::{
     marker::PhantomData,
 };
 use thiserror::Error;
-pub use unic_langid::LanguageIdentifier;
+pub use unic_langid::{langid, LanguageIdentifier};
+
+#[macro_export]
+macro_rules! langids {
+    ( $( $langid:expr ),* ) => {
+        &[$(
+            $crate::langid!($langid),
+        )*]
+    };
+}
 
 pub fn negotiate_languages<
     's,

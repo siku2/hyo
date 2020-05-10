@@ -10,7 +10,6 @@ edition = "2018"
 hyo-fluent = { path = "../hyo-fluent" }
 
 anyhow = "1.0"
-fluent = "0.12"
 semver = { version = "0.9", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 toml = "0.5"

@@ -24,7 +24,19 @@ pub fn load(path: impl AsRef<Path>) -> Result<GameLibrary, anyhow::Error> {
                 continue;
             }
         };
-        games.insert(game.manifest.id.clone(), game);
+
+        let game_id = &game.manifest.id;
+        if let Some(existing) = games.get(game_id) {
+            log::error!(
+                "id `{}` for {:?} already used by {:?}",
+                game_id,
+                game,
+                existing
+            );
+            continue;
+        }
+
+        games.insert(game_id.clone(), game);
     }
 
     Ok(games)

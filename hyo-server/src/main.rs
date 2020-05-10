@@ -1,5 +1,10 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
+use crate::{
+    library::GameLibrary,
+    session::{Session, SessionManager},
+};
+use hyo_fluent::LanguageIdentifier;
 use hyo_game::Game;
 use rocket::{
     http::{RawStr, Status},
@@ -10,11 +15,10 @@ use rocket::{
 };
 use rocket_contrib::json::Json;
 use serde::Serialize;
-
-use unic_langid::LanguageIdentifier;
 use uuid::Uuid;
 
 mod library;
+mod session;
 
 struct AcceptLanguage(pub Vec<LanguageIdentifier>);
 
@@ -29,7 +33,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for AcceptLanguage {
             }
         };
 
-        Outcome::Success(Self(fluent_langneg::parse_accepted_languages(languages)))
+        Outcome::Success(Self(hyo_fluent::parse_accepted_languages(languages)))
     }
 }
 
@@ -41,8 +45,8 @@ struct GameModel<'s> {
 }
 
 impl<'s> GameModel<'s> {
-    fn from_game(game: &'s Game, requested_languages: &[LanguageIdentifier]) -> Self {
-        let bundles = game.locales.negotiate(requested_languages);
+    fn from_game(game: &'s Game, accept_language: &AcceptLanguage) -> Self {
+        let bundles = game.locales.negotiate(&accept_language.0);
         let name = bundles.localize("hyo-game-name", None).into_owned();
         let description = bundles.localize("hyo-game-description", None).into_owned();
         Self {
@@ -51,24 +55,17 @@ impl<'s> GameModel<'s> {
             description,
         }
     }
-    fn from_game_old(game: &'s Game) -> Self {
-        Self {
-            id: &game.manifest.id,
-            name: "".into(),
-            description: "".into(),
-        }
-    }
 }
 
 #[rocket::get("/games")]
 fn get_games<'a>(
     accept_language: AcceptLanguage,
-    game_library: State<'a, library::GameLibrary>,
+    game_library: State<'a, GameLibrary>,
 ) -> Json<Vec<GameModel<'a>>> {
     let games = game_library
         .inner()
         .values()
-        .map(|game| GameModel::from_game(game, &accept_language.0))
+        .map(|game| GameModel::from_game(game, &accept_language))
         .collect();
     Json(games)
 }
@@ -76,25 +73,44 @@ fn get_games<'a>(
 #[rocket::get("/games/<id>")]
 fn get_game<'a>(
     id: &RawStr,
-    game_library: State<'a, library::GameLibrary>,
+    accept_language: AcceptLanguage,
+    game_library: State<'a, GameLibrary>,
 ) -> Option<Json<GameModel<'a>>> {
     game_library
         .inner()
         .get(id.as_str())
-        .map(GameModel::from_game_old)
+        .map(|game| GameModel::from_game(game, &accept_language))
         .map(Json)
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct SessionSettings {
-    pub public: bool,
-    pub max_players: usize,
+#[derive(Serialize)]
+struct SessionModel<'s> {
+    id: &'s Uuid,
+    game_id: &'s str,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct Session {
-    pub id: Uuid,
-    pub game_id: String,
+impl<'s> From<&'s Session> for SessionModel<'s> {
+    fn from(s: &'s Session) -> Self {
+        Self {
+            id: &s.id,
+            game_id: &s.game_id,
+        }
+    }
+}
+
+#[rocket::get("/sessions")]
+fn get_sessions<'a>(session_manager: State<'a, SessionManager>) -> Json<Vec<SessionModel<'a>>> {
+    let sessions = session_manager
+        .inner()
+        .iter_public_sessions()
+        .map(SessionModel::from)
+        .collect();
+    Json(sessions)
+}
+
+#[rocket::post("/sessions")]
+fn create_session<'a>(_session_manager: State<'a, SessionManager>) -> Json<SessionModel<'a>> {
+    unimplemented!()
 }
 
 fn main() -> Result<(), anyhow::Error> {
@@ -102,10 +118,12 @@ fn main() -> Result<(), anyhow::Error> {
     let rocket = rocket::ignite();
 
     let game_library = library::load("games")?;
+    let session_manager = SessionManager::default();
 
     rocket
         .manage(game_library)
-        .mount("/", rocket::routes![get_games, get_game])
+        .manage(session_manager)
+        .mount("/", rocket::routes![get_games, get_game, get_sessions])
         .launch();
 
     Ok(())

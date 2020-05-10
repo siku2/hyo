@@ -8,17 +8,17 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
-fluent = "0.12"
+hyo-fluent = { path = "../hyo-fluent" }
+
 futures = "0.3"
 js-sys = "0.3"
 log = "0.4"
 serde = "1.0"
 thiserror = "1.0"
-unic-langid = { version = "0.9", features = ["macros"] }
 wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
 wasm-bindgen-futures = "0.4"
 wasm-logger = "0.2"
-yew = "0.15"
+yew = "0.16"
 
 [dependencies.web-sys]
 version = "0.3"
