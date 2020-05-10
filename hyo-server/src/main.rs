@@ -19,6 +19,7 @@ use uuid::Uuid;
 
 mod library;
 mod session;
+mod uno;
 
 struct AcceptLanguage(pub Vec<LanguageIdentifier>);
 

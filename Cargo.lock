@@ -507,6 +507,7 @@ dependencies = [
  "hyo-fluent",
  "hyo-game",
  "log 0.4.8",
+ "rand",
  "rocket",
  "rocket_contrib",
  "serde",
