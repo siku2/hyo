@@ -20,6 +20,7 @@ use uuid::Uuid;
 mod library;
 mod session;
 mod uno;
+mod worker;
 
 struct AcceptLanguage(pub Vec<LanguageIdentifier>);
 
@@ -117,6 +118,8 @@ fn create_session<'a>(_session_manager: State<'a, SessionManager>) -> Json<Sessi
 fn main() -> Result<(), anyhow::Error> {
     // init logging and config
     let rocket = rocket::ignite();
+
+    worker::run_in_thread();
 
     let game_library = library::load("games")?;
     let session_manager = SessionManager::default();

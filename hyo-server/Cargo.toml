@@ -9,6 +9,9 @@ hyo-fluent = { path = "../hyo-fluent" }
 hyo-game = { path = "../hyo-game" }
 
 anyhow = "1.0"
+async-std = "1.5"
+async-tungstenite = { version = "0.4", features = ["async-std"] }
+futures = "0.3"
 log = "0.4"
 rand = "0.7"
 rocket = "0.4"
