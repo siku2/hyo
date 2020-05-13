@@ -4,6 +4,7 @@ use crate::{
     library::GameLibrary,
     session::{Session, SessionServer},
 };
+use hyo_bridge::rest::{GameInfo, GameInfoList};
 use hyo_fluent::LanguageIdentifier;
 use hyo_game::Game;
 use rocket::{
@@ -40,23 +41,12 @@ impl<'a, 'r> FromRequest<'a, 'r> for AcceptLanguage {
     }
 }
 
-#[derive(Serialize)]
-struct GameModel<'s> {
-    id: &'s str,
-    name: String,
-    description: String,
-}
-
-impl<'s> GameModel<'s> {
-    fn from_game(game: &'s Game, accept_language: &AcceptLanguage) -> Self {
-        let bundles = game.locales.negotiate(&accept_language.0);
-        let name = bundles.localize("hyo-game-name", None).into_owned();
-        let description = bundles.localize("hyo-game-description", None).into_owned();
-        Self {
-            id: &game.manifest.id,
-            name,
-            description,
-        }
+fn game_info_from_game(game: &Game, accept_language: &AcceptLanguage) -> GameInfo {
+    let bundles = game.locales.negotiate(&accept_language.0);
+    GameInfo {
+        id: game.manifest.id.clone(),
+        name: bundles.localize("hyo-game-name", None).into_owned(),
+        description: bundles.localize("hyo-game-description", None).into_owned(),
     }
 }
 
@@ -64,11 +54,11 @@ impl<'s> GameModel<'s> {
 fn get_games<'a>(
     accept_language: AcceptLanguage,
     game_library: State<'a, GameLibrary>,
-) -> Json<Vec<GameModel<'a>>> {
+) -> Json<GameInfoList> {
     let games = game_library
         .inner()
         .values()
-        .map(|game| GameModel::from_game(game, &accept_language))
+        .map(|game| game_info_from_game(game, &accept_language))
         .collect();
     Json(games)
 }
@@ -78,11 +68,11 @@ fn get_game<'a>(
     id: &RawStr,
     accept_language: AcceptLanguage,
     game_library: State<'a, GameLibrary>,
-) -> Option<Json<GameModel<'a>>> {
+) -> Option<Json<GameInfo>> {
     game_library
         .inner()
         .get(id.as_str())
-        .map(|game| GameModel::from_game(game, &accept_language))
+        .map(|game| game_info_from_game(game, &accept_language))
         .map(Json)
 }
 
@@ -138,8 +128,6 @@ fn join_session<'a>(_session_manager: State<'a, SessionServer>) -> Json<SessionM
 fn main() -> Result<(), anyhow::Error> {
     // init logging and config
     let rocket = rocket::ignite();
-
-    // worker::run_in_thread();
 
     let game_library = library::load("games")?;
     let session_manager = SessionServer::default();

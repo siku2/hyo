@@ -5,6 +5,7 @@ authors = ["Simon Berger <simon@siku2.io>"]
 edition = "2018"
 
 [dependencies]
+hyo-bridge = { path = "../hyo-bridge" }
 hyo-fluent = { path = "../hyo-fluent" }
 hyo-game = { path = "../hyo-game" }
 

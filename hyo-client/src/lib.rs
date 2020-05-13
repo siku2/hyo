@@ -1,6 +1,6 @@
+mod api;
 mod app;
 mod components;
-mod fetch;
 mod game;
 mod locale;
 mod views;

@@ -1,4 +1,3 @@
-use crate::fetch;
 use futures::future;
 use hyo_fluent::{
     FluentArgs,
@@ -9,7 +8,6 @@ use hyo_fluent::{
 };
 use std::{borrow::Cow, rc::Rc, str::FromStr};
 use thiserror::Error;
-use web_sys::{Request, RequestInit, RequestMode};
 
 static FALLBACK_LANGUAGE: LanguageIdentifier = hyo_fluent::langid!("en-GB");
 const SUPPORTED_LANGUAGES: &[LanguageIdentifier] = hyo_fluent::langids!["de-DE", "en-GB"];
@@ -50,7 +48,7 @@ fn get_user_languages() -> Vec<&'static LanguageIdentifier> {
 #[derive(Debug, Error)]
 pub enum FetchFluentError {
     #[error(transparent)]
-    Fetch(#[from] fetch::FetchError),
+    Fetch(#[from] reqwest::Error),
     #[error("parse error")]
     Parse,
 }
@@ -58,13 +56,7 @@ pub enum FetchFluentError {
 async fn fetch_fluent_resource(
     langid: &LanguageIdentifier,
 ) -> Result<FluentResource, FetchFluentError> {
-    let mut opts = RequestInit::new();
-    opts.method("GET");
-    opts.mode(RequestMode::Cors);
-
-    let request = Request::new_with_str_and_init(&format!("locale/{}.ftl", langid), &opts).unwrap();
-
-    let raw = fetch::perform_text_request(request).await?;
+    let raw = reqwest::get(&format!("locale/{}.ftl", langid)).await?.text().await?;
     FluentResource::try_new(raw).map_err(|_| FetchFluentError::Parse)
 }
 

@@ -1,4 +1,10 @@
-use crate::{components::icon::MDIcon, locale::Locale};
+use crate::{
+    api::API,
+    components::{game::GamesList, icon::MDIcon},
+    locale::Locale,
+};
+use std::rc::Rc;
+use url::Url;
 use yew::prelude::*;
 
 #[derive(Clone, PartialEq, Properties)]
@@ -7,6 +13,7 @@ pub struct StartViewProps {
 }
 pub struct StartView {
     props: StartViewProps,
+    api: Rc<API>,
 }
 
 impl Component for StartView {
@@ -14,7 +21,10 @@ impl Component for StartView {
     type Properties = StartViewProps;
 
     fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
-        Self { props }
+        Self {
+            props,
+            api: Rc::new(API::new(Url::parse("http://localhost:8000/").unwrap())),
+        }
     }
 
     fn update(&mut self, _msg: Self::Message) -> ShouldRender {
@@ -36,6 +46,8 @@ impl Component for StartView {
 
         html! {
             <div class="start-layout">
+                <GamesList api=self.api.clone()/>
+
                 <div class="start-layout__background"/>
 
                 <h1 class="start-layout__title">{ locale.localize("title", None) }</h1>
