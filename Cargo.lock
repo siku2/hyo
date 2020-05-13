@@ -655,6 +655,7 @@ dependencies = [
  "hyo-fluent",
  "semver",
  "serde",
+ "thiserror",
  "toml 0.5.6",
 ]
 

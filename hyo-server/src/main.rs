@@ -9,12 +9,14 @@ use hyo_game::Game;
 use rocket::{
     http::{RawStr, Status},
     request::{self, FromRequest},
+    response::NamedFile,
     Outcome,
     Request,
     State,
 };
 use rocket_contrib::json::Json;
 use serde::Serialize;
+use std::path::PathBuf;
 use uuid::Uuid;
 
 mod library;
@@ -84,6 +86,20 @@ fn get_game<'a>(
         .map(Json)
 }
 
+#[rocket::get("/games/<game_id>/assets/<name..>")]
+fn get_game_asset(
+    game_id: &RawStr,
+    name: PathBuf,
+    game_library: State<GameLibrary>,
+) -> Option<NamedFile> {
+    game_library
+        .inner()
+        .get(game_id.as_str())?
+        .assets
+        .get(name.to_str()?)
+        .and_then(|asset| NamedFile::open(&asset.path).ok())
+}
+
 #[derive(Serialize)]
 struct SessionModel<'s> {
     id: &'s Uuid,
@@ -131,7 +147,17 @@ fn main() -> Result<(), anyhow::Error> {
     rocket
         .manage(game_library)
         .manage(session_manager)
-        .mount("/", rocket::routes![get_games, get_game, get_sessions])
+        .mount(
+            "/",
+            rocket::routes![
+                get_games,
+                get_game,
+                get_game_asset,
+                get_sessions,
+                create_session,
+                join_session
+            ],
+        )
         .launch();
 
     Ok(())
