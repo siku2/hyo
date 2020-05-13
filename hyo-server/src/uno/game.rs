@@ -2,7 +2,7 @@ use uuid::Uuid;
 
 use rand::{seq::SliceRandom, thread_rng};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Color {
     Blue,
     Green,
@@ -26,11 +26,11 @@ pub enum Card {
 }
 
 impl Card {
-    pub fn get_color(&self) -> Option<&Color> {
+    pub fn get_color(&self) -> Option<Color> {
         use Card::*;
         match self {
-            Numeric(c, _) | Skip(c) | Reverse(c) | DrawTwo(c) => Some(c),
-            Wild(c) | WildDrawFour(c) => c.as_ref(),
+            Numeric(c, _) | Skip(c) | Reverse(c) | DrawTwo(c) => Some(*c),
+            Wild(c) | WildDrawFour(c) => *c,
         }
     }
 
@@ -70,19 +70,19 @@ fn build_default_deck() -> Vec<Card> {
         deck.push(Card::WildDrawFour(None));
     }
 
-    for color in Color::ALL {
+    for &color in Color::ALL {
         // 4 * 1 = 4
-        deck.push(Card::Numeric(color.clone(), 0));
+        deck.push(Card::Numeric(color, 0));
 
         for _ in 0..2 {
             for n in 1..=9 {
                 // 4 * 2 * 9 = 72
-                deck.push(Card::Numeric(color.clone(), n));
+                deck.push(Card::Numeric(color, n));
             }
             // 4 * 2 * (1 + 1 + 1) = 24
-            deck.push(Card::Skip(color.clone()));
-            deck.push(Card::DrawTwo(color.clone()));
-            deck.push(Card::Reverse(color.clone()));
+            deck.push(Card::Skip(color));
+            deck.push(Card::DrawTwo(color));
+            deck.push(Card::Reverse(color));
         }
     }
 

@@ -4,6 +4,7 @@ mod fetch;
 mod game;
 mod locale;
 mod views;
+mod websocket;
 
 use wasm_bindgen::prelude::*;
 

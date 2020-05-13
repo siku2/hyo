@@ -2,7 +2,7 @@
 
 use crate::{
     library::GameLibrary,
-    session::{Session, SessionManager},
+    session::{Session, SessionServer},
 };
 use hyo_fluent::LanguageIdentifier;
 use hyo_game::Game;
@@ -20,7 +20,6 @@ use uuid::Uuid;
 mod library;
 mod session;
 mod uno;
-mod worker;
 
 struct AcceptLanguage(pub Vec<LanguageIdentifier>);
 
@@ -101,7 +100,7 @@ impl<'s> From<&'s Session> for SessionModel<'s> {
 }
 
 #[rocket::get("/sessions")]
-fn get_sessions<'a>(session_manager: State<'a, SessionManager>) -> Json<Vec<SessionModel<'a>>> {
+fn get_sessions<'a>(session_manager: State<'a, SessionServer>) -> Json<Vec<SessionModel<'a>>> {
     let sessions = session_manager
         .inner()
         .iter_public_sessions()
@@ -111,7 +110,12 @@ fn get_sessions<'a>(session_manager: State<'a, SessionManager>) -> Json<Vec<Sess
 }
 
 #[rocket::post("/sessions")]
-fn create_session<'a>(_session_manager: State<'a, SessionManager>) -> Json<SessionModel<'a>> {
+fn create_session<'a>(_session_manager: State<'a, SessionServer>) -> Json<SessionModel<'a>> {
+    unimplemented!()
+}
+
+#[rocket::post("/sessions/join")]
+fn join_session<'a>(_session_manager: State<'a, SessionServer>) -> Json<SessionModel<'a>> {
     unimplemented!()
 }
 
@@ -119,10 +123,10 @@ fn main() -> Result<(), anyhow::Error> {
     // init logging and config
     let rocket = rocket::ignite();
 
-    worker::run_in_thread();
+    // worker::run_in_thread();
 
     let game_library = library::load("games")?;
-    let session_manager = SessionManager::default();
+    let session_manager = SessionServer::default();
 
     rocket
         .manage(game_library)
