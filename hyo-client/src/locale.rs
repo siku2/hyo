@@ -8,6 +8,7 @@ use hyo_fluent::{
 };
 use std::{borrow::Cow, rc::Rc, str::FromStr};
 use thiserror::Error;
+use url::Url;
 
 static FALLBACK_LANGUAGE: LanguageIdentifier = hyo_fluent::langid!("en-GB");
 const SUPPORTED_LANGUAGES: &[LanguageIdentifier] = hyo_fluent::langids!["de-DE", "en-GB"];
@@ -45,18 +46,32 @@ fn get_user_languages() -> Vec<&'static LanguageIdentifier> {
     hyo_fluent::negotiate_languages(&langs, &SUPPORTED_LANGUAGES, &FALLBACK_LANGUAGE)
 }
 
+fn get_url() -> Option<Url> {
+    web_sys::window()?
+        .location()
+        .href()
+        .ok()
+        .and_then(|href| Url::parse(&href).ok())
+}
+
 #[derive(Debug, Error)]
 pub enum FetchFluentError {
+    #[error("invalid url {0}")]
+    InvalidURL(#[from] url::ParseError),
     #[error(transparent)]
     Fetch(#[from] reqwest::Error),
     #[error("parse error")]
     Parse,
+    #[error("unknown error: {0}")]
+    Unknown(#[from] anyhow::Error),
 }
 
 async fn fetch_fluent_resource(
     langid: &LanguageIdentifier,
 ) -> Result<FluentResource, FetchFluentError> {
-    let raw = reqwest::get(&format!("locale/{}.ftl", langid)).await?.text().await?;
+    let base_url = get_url().ok_or_else(|| anyhow::anyhow!("couldn't determine current url"))?;
+    let url = base_url.join(&format!("locale/{}.ftl", langid))?;
+    let raw = reqwest::get(url).await?.text().await?;
     FluentResource::try_new(raw).map_err(|_| FetchFluentError::Parse)
 }
 

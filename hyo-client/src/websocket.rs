@@ -1,6 +1,6 @@
-use futures::{channel::mpsc, Sink, Stream, StreamExt};
-use std::{convert::TryFrom, pin::Pin};
-use wasm_bindgen::{closure::Closure, JsCast, JsValue};
+use futures::{channel::mpsc, StreamExt};
+
+use wasm_bindgen::{closure::Closure, JsCast};
 use web_sys::{CloseEvent, ErrorEvent, Event, MessageEvent, WebSocket};
 
 #[derive(Clone, Copy, Debug)]
@@ -48,7 +48,7 @@ impl RawWS {
             tx.unbounded_send(RawWSEvent::Message(e)).unwrap();
         });
 
-        let tx = tx_.clone();
+        let tx = tx_;
         let onopen_callback: Closure<dyn FnMut(Event)> = Closure::new(move |e| {
             tx.unbounded_send(RawWSEvent::Open(e)).unwrap();
         });

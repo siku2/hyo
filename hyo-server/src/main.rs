@@ -18,7 +18,7 @@ use rocket::{
 use rocket_contrib::json::Json;
 use rocket_cors::{AllowedHeaders, AllowedOrigins, Cors, CorsOptions};
 use serde::Serialize;
-use std::{collections::HashSet, path::PathBuf};
+use std::path::PathBuf;
 use uuid::Uuid;
 
 mod library;

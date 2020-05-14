@@ -1,4 +1,4 @@
-use hyo_bridge::rest::{GameInfo, GameInfoList};
+use hyo_bridge::rest::GameInfoList;
 use reqwest::Client;
 use url::{ParseError, Url};
 

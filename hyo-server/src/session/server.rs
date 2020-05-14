@@ -31,13 +31,13 @@ impl SessionServer {
 }
 
 async fn handle_connection(addr: SocketAddr, stream: TcpStream) -> Result<(), anyhow::Error> {
-    let mut session = None;
+    let session = None;
     let mut player_id = None;
 
     let conn = Connection::accept_hdr(
         addr,
         stream,
-        |req: &Request, resp: Response| -> Result<Response, ErrorResponse> {
+        |_req: &Request, resp: Response| -> Result<Response, ErrorResponse> {
             // TODO use response builder for custom error code and such
             // session = self
             //     .sessions
@@ -50,9 +50,9 @@ async fn handle_connection(addr: SocketAddr, stream: TcpStream) -> Result<(), an
     )
     .await?;
 
-    let session: &Session = session.unwrap();
+    let _session: &Session = session.unwrap();
 
-    let player = Player {
+    let _player = Player {
         id: player_id.unwrap(),
         conn,
     };
