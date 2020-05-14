@@ -1,10 +1,12 @@
-use crate::api::{APIError, API};
+use super::image::ImageFallback;
+use crate::api::{APIError, SharedAPI};
 use hyo_bridge::rest::{GameInfo, GameInfoList};
 use std::rc::Rc;
 use yew::prelude::*;
 
-#[derive(Clone, Eq, PartialEq, Properties)]
+#[derive(Clone, PartialEq, Properties)]
 pub struct GameCardProps {
+    pub api: SharedAPI,
     pub info: Rc<GameInfo>,
 }
 
@@ -37,22 +39,25 @@ impl Component for GameCard {
         let props = &self.props;
         let info = &props.info;
 
+        let banner_url = props
+            .api
+            .game_asset_url_str(&info.id, "banner")
+            .unwrap_or_default();
+
+        // TODO fallback image
+
         html! {
             <div class="card">
-                { info.name.clone() }
+                <ImageFallback class="card__banner" src=banner_url fallback_src=""/>
+                <h2 class="card__title">{ info.name.clone() }</h2>
+                <p class="card__description">{ info.description.clone() }</p>
             </div>
         }
     }
 }
-#[derive(Clone, Properties)]
+#[derive(Clone, PartialEq, Properties)]
 pub struct GamesListProps {
-    pub api: Rc<API>,
-}
-
-impl PartialEq for GamesListProps {
-    fn eq(&self, other: &GamesListProps) -> bool {
-        Rc::ptr_eq(&self.api, &other.api)
-    }
+    pub api: SharedAPI,
 }
 
 pub enum GamesListMessage {
@@ -79,7 +84,7 @@ impl GamesList {
     }
 
     fn start_get_games(&mut self) {
-        let api = Rc::clone(&self.props.api);
+        let api = self.props.api.clone();
         let link = self.link.clone();
         self.loading = true;
         wasm_bindgen_futures::spawn_local(async move {
@@ -135,7 +140,7 @@ impl Component for GamesList {
     fn view(&self) -> Html {
         let card_it = self.games.iter().map(|info| {
             html! {
-                <GameCard info=info/>
+                <GameCard api=self.props.api.clone() info=info/>
             }
         });
 

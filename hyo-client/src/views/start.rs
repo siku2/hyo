@@ -1,10 +1,10 @@
+use super::GamesView;
 use crate::{
-    api::API,
-    components::{game::GamesList, icon::MDIcon},
+    api::{SharedAPI, API},
+    components::icon::MDIcon,
     locale::Locale,
 };
-use std::rc::Rc;
-use url::Url;
+use reqwest::Url;
 use yew::prelude::*;
 
 #[derive(Clone, PartialEq, Properties)]
@@ -13,7 +13,7 @@ pub struct StartViewProps {
 }
 pub struct StartView {
     props: StartViewProps,
-    api: Rc<API>,
+    api: SharedAPI,
 }
 
 impl Component for StartView {
@@ -23,7 +23,7 @@ impl Component for StartView {
     fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
         Self {
             props,
-            api: Rc::new(API::new(Url::parse("http://localhost:8000/").unwrap())),
+            api: SharedAPI::from(API::new(Url::parse("http://localhost:8000/").unwrap())),
         }
     }
 
@@ -46,7 +46,7 @@ impl Component for StartView {
 
         html! {
             <div class="start-layout">
-                <GamesList api=self.api.clone()/>
+                <GamesView api=self.api.clone() locale=locale.clone()/>
 
                 <div class="start-layout__background"/>
 
