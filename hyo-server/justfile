@@ -1,0 +1,11 @@
+# TODO just use cargo run.
+#   Currently needs to be like this because of the games directory.
+run:
+    #!/usr/bin/env sh
+    cd ..
+    cargo run -p hyo-server
+
+watch:
+    watchexec --clear --no-shell \
+        -f src \
+        --restart just run

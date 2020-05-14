@@ -1,7 +1,2 @@
-/.cache/
 /dist/
-/node_modules/
 /pkg/
-
-# we only have dev dependencies so this doesn't matter
-/package-lock.json

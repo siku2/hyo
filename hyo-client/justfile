@@ -1,0 +1,27 @@
+build-rust:
+    wasm-pack build \
+        --no-typescript --target web \
+        --out-name index
+    mkdir -p dist
+    find pkg \( -iname "*.js" -o -iname "*.wasm" \) -type f -exec cp {} dist/ \;
+
+build-sass:
+    sass \
+        --update --load-path=site/scss \
+        site/scss/hyo.scss dist/hyo.css
+
+build-static:
+    mkdir -p dist
+    cp -r static/* dist
+
+build: build-rust build-sass build-static
+
+serve: build
+    miniserve \
+        --port 1234 --index "index.html" \
+        "dist"
+
+watch:
+    watchexec --clear --no-shell \
+        -i dist \
+        --restart just serve

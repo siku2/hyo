@@ -77,8 +77,6 @@ impl Assets {
                     })?
                     .to_string();
 
-                println!("{:?} = {}", entry_path, name);
-
                 inst.add(Asset::new(name, entry_path));
             }
         }
