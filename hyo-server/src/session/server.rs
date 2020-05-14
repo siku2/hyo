@@ -1,7 +1,7 @@
 use super::{
     connection::{Connection, ErrorResponse, Request, Response},
-    Session,
     Player,
+    Session,
 };
 use async_std::{
     net::{TcpListener, TcpStream, ToSocketAddrs},
@@ -52,7 +52,7 @@ async fn handle_connection(addr: SocketAddr, stream: TcpStream) -> Result<(), an
 
     let session: &Session = session.unwrap();
 
-    let player =Player {
+    let player = Player {
         id: player_id.unwrap(),
         conn,
     };

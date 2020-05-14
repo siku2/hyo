@@ -8,7 +8,7 @@ use hyo_bridge::rest::{GameInfo, GameInfoList};
 use hyo_fluent::LanguageIdentifier;
 use hyo_game::Game;
 use rocket::{
-    http::{RawStr, Status},
+    http::{Method, RawStr, Status},
     request::{self, FromRequest},
     response::NamedFile,
     Outcome,
@@ -16,8 +16,9 @@ use rocket::{
     State,
 };
 use rocket_contrib::json::Json;
+use rocket_cors::{AllowedHeaders, AllowedOrigins, Cors, CorsOptions};
 use serde::Serialize;
-use std::path::PathBuf;
+use std::{collections::HashSet, path::PathBuf};
 use uuid::Uuid;
 
 mod library;
@@ -125,6 +126,23 @@ fn join_session<'a>(_session_manager: State<'a, SessionServer>) -> Json<SessionM
     unimplemented!()
 }
 
+fn build_cors() -> Result<Cors, rocket_cors::Error> {
+    let allowed_methods = vec![Method::Get]
+        .drain(..)
+        .map(rocket_cors::Method::from)
+        .collect();
+
+    // TODO restrict access at least a bit
+    CorsOptions {
+        allowed_origins: AllowedOrigins::all(),
+        allowed_methods,
+        allowed_headers: AllowedHeaders::all(),
+        send_wildcard: true,
+        ..Default::default()
+    }
+    .to_cors()
+}
+
 fn main() -> Result<(), anyhow::Error> {
     // init logging and config
     let rocket = rocket::ignite();
@@ -146,6 +164,7 @@ fn main() -> Result<(), anyhow::Error> {
                 join_session
             ],
         )
+        .attach(build_cors()?)
         .launch();
 
     Ok(())

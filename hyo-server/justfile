@@ -7,5 +7,5 @@ run:
 
 watch:
     watchexec --clear --no-shell \
-        -f src \
+        -w src \
         --restart just run
