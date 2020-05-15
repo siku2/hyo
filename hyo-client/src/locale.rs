@@ -1,3 +1,4 @@
+use crate::js::get_url;
 use futures::future;
 use hyo_fluent::{
     FluentArgs,
@@ -6,9 +7,8 @@ use hyo_fluent::{
     LanguageIdentifier,
     OwnedFluentBundles,
 };
-use std::{borrow::Cow, rc::Rc, str::FromStr};
+use std::{borrow::Cow, fmt, rc::Rc, str::FromStr};
 use thiserror::Error;
-use url::Url;
 
 static FALLBACK_LANGUAGE: LanguageIdentifier = hyo_fluent::langid!("en-GB");
 const SUPPORTED_LANGUAGES: &[LanguageIdentifier] = hyo_fluent::langids!["de-DE", "en-GB"];
@@ -46,14 +46,6 @@ fn get_user_languages() -> Vec<&'static LanguageIdentifier> {
     hyo_fluent::negotiate_languages(&langs, &SUPPORTED_LANGUAGES, &FALLBACK_LANGUAGE)
 }
 
-fn get_url() -> Option<Url> {
-    web_sys::window()?
-        .location()
-        .href()
-        .ok()
-        .and_then(|href| Url::parse(&href).ok())
-}
-
 #[derive(Debug, Error)]
 pub enum FetchFluentError {
     #[error("invalid url {0}")]
@@ -70,7 +62,8 @@ async fn fetch_fluent_resource(
     langid: &LanguageIdentifier,
 ) -> Result<FluentResource, FetchFluentError> {
     let base_url = get_url().ok_or_else(|| anyhow::anyhow!("couldn't determine current url"))?;
-    let url = base_url.join(&format!("locale/{}.ftl", langid))?;
+    // TODO configurable base url
+    let url = base_url.join(&format!("/locale/{}.ftl", langid))?;
     let raw = reqwest::get(url).await?.text().await?;
     FluentResource::try_new(raw).map_err(|_| FetchFluentError::Parse)
 }
@@ -117,6 +110,14 @@ impl Locale {
 
     pub fn localize<'a>(&'a self, id: &'a str, args: Option<&'a FluentArgs<'a>>) -> Cow<'a, str> {
         self.builtin.localize(id, args)
+    }
+}
+
+impl fmt::Debug for Locale {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Locale")
+            .field("builtin", &format!("{:p}", self.builtin))
+            .finish()
     }
 }
 

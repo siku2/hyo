@@ -11,7 +11,7 @@ _ensure-sass-installed:
 
 install-dependencies:
     cargo install \
-        miniserve \
+        simple-http-server \
         wasm-pack \
         watchexec
     

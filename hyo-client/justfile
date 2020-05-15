@@ -1,7 +1,8 @@
 @build-rust:
     echo "compiling rust to wasm"
     wasm-pack build \
-        --no-typescript --target web --out-name index
+        --dev --no-typescript \
+        --target web --out-name index
     mkdir -p dist
     find pkg \( -iname "*.js" -o -iname "*.wasm" \) -type f -exec cp {} dist/ \;
 
@@ -19,8 +20,9 @@
 build: build-rust build-sass build-static
 
 @serve: build
-    miniserve \
-        --port 1234 --index "index.html" \
+    simple-http-server \
+        --index --nocache \
+        --port 1234 --try-file "dist/index.html" \
         dist
 
 watch:

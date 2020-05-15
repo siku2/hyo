@@ -36,6 +36,12 @@ impl Component for GamesView {
 
         html! {
             <div class="games-layout">
+                <div class="games-layout__background"/>
+
+                <div class="games-layout__header">
+                    <button>{ "BACK" }</button>
+                </div>
+
                 <GamesList api=props.api.clone()/>
             </div>
         }

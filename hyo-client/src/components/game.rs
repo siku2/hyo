@@ -10,20 +10,36 @@ pub struct GameCardProps {
     pub info: Rc<GameInfo>,
 }
 
+pub enum GameCardMsg {
+    ToggleActive,
+}
+
 pub struct GameCard {
     props: GameCardProps,
+    link: ComponentLink<Self>,
+    active: bool,
 }
 
 impl Component for GameCard {
-    type Message = ();
+    type Message = GameCardMsg;
     type Properties = GameCardProps;
 
-    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
-        Self { props }
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        Self {
+            props,
+            link,
+            active: false,
+        }
     }
 
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
-        false
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        use GameCardMsg::*;
+        match msg {
+            ToggleActive => {
+                self.active = !self.active;
+                true
+            }
+        }
     }
 
     fn change(&mut self, props: Self::Properties) -> bool {
@@ -46,11 +62,17 @@ impl Component for GameCard {
 
         // TODO fallback image
 
+        let mut classes = vec!["game-card"];
+        if self.active {
+            classes.push("active");
+        }
+
         html! {
-            <div class="card">
-                <ImageFallback class="card__banner" src=banner_url fallback_src=""/>
-                <h2 class="card__title">{ info.name.clone() }</h2>
-                <p class="card__description">{ info.description.clone() }</p>
+            <div class=classes onclick=self.link.callback(|_| GameCardMsg::ToggleActive)>
+                <ImageFallback class="game-card__background" src=banner_url fallback_src=""/>
+                <div class="game-card__preview">
+                    <h2 class="game-card__title">{ info.name.clone() }</h2>
+                </div>
             </div>
         }
     }
@@ -128,9 +150,10 @@ impl Component for GamesList {
 
     fn change(&mut self, props: Self::Properties) -> bool {
         if self.props != props {
+            if self.props.api != props.api {
+                self.start_get_games();
+            }
             self.props = props;
-            // TODO redo games request only if api changed
-            self.start_get_games();
             true
         } else {
             false
@@ -146,7 +169,7 @@ impl Component for GamesList {
 
         // TODO render error
         html! {
-            <div>
+            <div class="game-list">
                 { for card_it }
             </div>
         }

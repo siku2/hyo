@@ -1,0 +1,10 @@
+@use "mixins";
+@use "mixins/patterns";
+@use "ui/card";
+
+.games-layout {
+  &__background {
+    @include mixins.background;
+    @include patterns.seigaiha;
+  }
+}

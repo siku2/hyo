@@ -1,0 +1,54 @@
+@use "sass:selector";
+
+@use "variables/colors";
+@use "variables/fonts";
+
+.game-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.game-card {
+  position: relative;
+
+  background: colors.$background;
+
+  &__preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    height: 100%;
+    width: 100%;
+  }
+
+  &__background {
+    width: 100%;
+
+    transition: opacity, filter 200ms;
+  }
+
+  &.active > &__background {
+    filter: blur(1rem);
+    opacity: 50%;
+  }
+
+  &__title {
+    font-family: fonts.$text;
+    font-size: 5rem;
+
+    user-select: none;
+    visibility: hidden;
+
+    transition: visibility 200ms;
+  }
+
+  &.active &__title {
+    visibility: visible;
+  }
+}
