@@ -48,15 +48,15 @@ impl Component for StartView {
             <div class="start-layout">
                 <div class="start-layout__background"/>
 
+                <div class="start-layout__settings">
+                    <MDIcon icon="settings"/>
+                </div>
                 <h1 class="start-layout__title">{ locale.localize("title", None) }</h1>
                 <div class="start-layout__buttons button-row button-row--center">
                     <button class="button-row__btn" onclick=to_route(AppRoute::Games)>
                         { locale.localize("create-game", None) }
                     </button>
                     <button class="button-row__btn">{ locale.localize("join-game", None) }</button>
-                </div>
-                <div class="start-layout__settings">
-                    <MDIcon icon="settings"/>
                 </div>
             </div>
         }

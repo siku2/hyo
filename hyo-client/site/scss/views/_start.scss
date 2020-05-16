@@ -7,10 +7,11 @@
   display: grid;
 
   grid:
-    ".    title   .       " auto
-    ".    buttons .       " 5rem
-    ".    .       settings" 5rem
-    / 1fr 4fr 1fr;
+    ". . ." 2rem
+    "settings . ." 5rem
+    ". title   ." 1fr
+    ". buttons ." 1fr
+    / 1fr 6fr 1fr;
 
   align-items: center;
   justify-items: center;
@@ -22,12 +23,18 @@
     @include patterns.seigaiha;
   }
 
+  &__settings {
+    grid-area: settings;
+
+    font-size: 3rem;
+  }
+
   &__title {
     grid-area: title;
 
     margin: 0;
 
-    font-size: 10rem;
+    font-size: 20rem;
     font-family: fonts.$title;
 
     user-select: none;
@@ -35,12 +42,7 @@
 
   &__buttons {
     grid-area: buttons;
-    align-self: start;
 
     width: 100%;
-  }
-
-  &__settings {
-    grid-area: settings;
   }
 }
